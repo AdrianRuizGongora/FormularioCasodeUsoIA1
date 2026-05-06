@@ -1,0 +1,1931 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formulario de Identificación de Herramientas de IA — Proyectos de Dato</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap');
+
+  :root {
+    --ada-navy:    #0D2B4E;
+    --ada-blue:    #1460AA;
+    --ada-teal:    #00A896;
+    --ada-green:   #2ECC71;
+    --ada-light:   #EAF3FB;
+    --ada-grey:    #F5F7FA;
+    --ada-border:  #D1E3F5;
+    --ada-text:    #1A2D40;
+    --ada-muted:   #6B8299;
+    --ada-white:   #FFFFFF;
+    --ada-yellow:  #F59E0B;
+    --ada-red:     #E53935;
+    --radius:      10px;
+    --shadow:      0 2px 12px rgba(13,43,78,.10);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--ada-grey);
+    color: var(--ada-text);
+    min-height: 100vh;
+    font-size: 14.5px;
+    line-height: 1.6;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--ada-navy);
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 16px rgba(0,0,0,.3);
+  }
+  .header-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 18px 32px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .header-logo {
+    display: flex;
+    flex-direction: column;
+    border-right: 2px solid rgba(255,255,255,.2);
+    padding-right: 20px;
+  }
+  .header-logo span:first-child {
+    font-family: 'Sora', sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    color: rgba(255,255,255,.65);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+  .header-logo span:last-child {
+    font-family: 'Sora', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ada-white);
+    letter-spacing: .04em;
+  }
+  .header-title {
+    flex: 1;
+  }
+  .header-title h1 {
+    font-family: 'Sora', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ada-white);
+  }
+  .header-title p {
+    font-size: 12px;
+    color: rgba(255,255,255,.55);
+    margin-top: 2px;
+  }
+  .header-badge {
+    background: var(--ada-teal);
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-family: 'Sora', sans-serif;
+    letter-spacing: .04em;
+    white-space: nowrap;
+  }
+
+  /* ── PROGRESS BAR ── */
+  .progress-bar-wrap {
+    background: rgba(255,255,255,.1);
+    height: 3px;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--ada-teal);
+    transition: width .4s ease;
+    width: 0%;
+  }
+
+  /* ── NAV STEPPER ── */
+  .stepper-wrap {
+    background: var(--ada-white);
+    border-bottom: 1px solid var(--ada-border);
+    position: sticky;
+    top: 73px;
+    z-index: 90;
+    box-shadow: 0 1px 6px rgba(13,43,78,.07);
+  }
+  .stepper {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 32px;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+  }
+  .step-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 18px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--ada-muted);
+    border-bottom: 3px solid transparent;
+    transition: all .2s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .step-btn.active {
+    color: var(--ada-blue);
+    border-bottom-color: var(--ada-blue);
+    font-weight: 500;
+  }
+  .step-btn.done {
+    color: var(--ada-teal);
+    border-bottom-color: var(--ada-teal);
+  }
+  .step-num {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--ada-grey);
+    color: var(--ada-muted);
+    flex-shrink: 0;
+  }
+  .step-btn.active .step-num {
+    background: var(--ada-blue);
+    color: white;
+  }
+  .step-btn.done .step-num {
+    background: var(--ada-teal);
+    color: white;
+  }
+
+  /* ── MAIN LAYOUT ── */
+  .main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 32px 32px 64px;
+  }
+
+  /* ── SECTIONS ── */
+  .section { display: none; }
+  .section.active { display: block; animation: fadeIn .3s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── SECTION HEADER ── */
+  .sec-header {
+    margin-bottom: 28px;
+  }
+  .sec-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ada-teal);
+    margin-bottom: 8px;
+  }
+  .sec-tag::before {
+    content: '';
+    display: block;
+    width: 18px;
+    height: 2px;
+    background: var(--ada-teal);
+    border-radius: 2px;
+  }
+  .sec-header h2 {
+    font-family: 'Sora', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--ada-navy);
+    line-height: 1.3;
+  }
+  .sec-header p {
+    color: var(--ada-muted);
+    margin-top: 8px;
+    font-size: 14px;
+    max-width: 700px;
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--ada-white);
+    border: 1px solid var(--ada-border);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+  .card-title {
+    font-family: 'Sora', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ada-navy);
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .card-title .q-num {
+    font-size: 11px;
+    color: var(--ada-white);
+    background: var(--ada-blue);
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .card-sub {
+    font-size: 12.5px;
+    color: var(--ada-muted);
+    margin-bottom: 16px;
+    margin-left: 34px;
+  }
+
+  /* ── PHASE ACCORDION ── */
+  .phase-card {
+    background: var(--ada-white);
+    border: 1px solid var(--ada-border);
+    border-radius: var(--radius);
+    margin-bottom: 14px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 24px;
+    cursor: pointer;
+    user-select: none;
+    transition: background .2s;
+  }
+  .phase-header:hover { background: var(--ada-light); }
+  .phase-badge {
+    font-family: 'Sora', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: var(--ada-navy);
+    color: white;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .phase-name {
+    font-family: 'Sora', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ada-navy);
+    flex: 1;
+  }
+  .phase-chevron {
+    color: var(--ada-muted);
+    font-size: 18px;
+    transition: transform .25s;
+    flex-shrink: 0;
+  }
+  .phase-card.open .phase-chevron { transform: rotate(180deg); }
+  .phase-body {
+    display: none;
+    padding: 0 24px 24px;
+    border-top: 1px solid var(--ada-border);
+  }
+  .phase-card.open .phase-body { display: block; animation: fadeIn .2s ease; }
+
+  /* ── TASK CHIPS ── */
+  .task-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .task-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1.5px solid var(--ada-border);
+    background: var(--ada-grey);
+    font-size: 12px;
+    color: var(--ada-text);
+    cursor: pointer;
+    transition: all .18s;
+    user-select: none;
+  }
+  .task-chip input[type="checkbox"] {
+    accent-color: var(--ada-teal);
+    width: 13px;
+    height: 13px;
+    cursor: pointer;
+  }
+  .task-chip:has(input:checked) {
+    background: #E0F7F4;
+    border-color: var(--ada-teal);
+    color: #006B5E;
+    font-weight: 500;
+  }
+
+  /* ── FORM CONTROLS ── */
+  label.q-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ada-navy);
+    margin-bottom: 7px;
+    margin-top: 18px;
+  }
+  label.q-label:first-child { margin-top: 8px; }
+
+  input[type="text"],
+  textarea,
+  select {
+    width: 100%;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13.5px;
+    color: var(--ada-text);
+    border: 1.5px solid var(--ada-border);
+    border-radius: 7px;
+    padding: 9px 13px;
+    background: var(--ada-grey);
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+    resize: vertical;
+  }
+  input[type="text"]:focus,
+  textarea:focus,
+  select:focus {
+    border-color: var(--ada-blue);
+    box-shadow: 0 0 0 3px rgba(20,96,170,.12);
+    background: var(--ada-white);
+  }
+  textarea { min-height: 76px; }
+
+  /* ── RADIO / LIKERT ── */
+  .radio-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+  }
+  .radio-opt {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 16px;
+    border: 1.5px solid var(--ada-border);
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--ada-text);
+    transition: all .18s;
+    user-select: none;
+    background: var(--ada-grey);
+  }
+  .radio-opt input { accent-color: var(--ada-blue); }
+  .radio-opt:has(input:checked) {
+    border-color: var(--ada-blue);
+    background: var(--ada-light);
+    color: var(--ada-blue);
+    font-weight: 500;
+  }
+
+  /* ── SCALE LIKERT (1-5) ── */
+  .scale-wrap {
+    display: flex;
+    gap: 0;
+    margin-top: 6px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1.5px solid var(--ada-border);
+    background: var(--ada-grey);
+  }
+  .scale-opt {
+    flex: 1;
+    text-align: center;
+    padding: 9px 4px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    border-right: 1px solid var(--ada-border);
+    transition: all .18s;
+    position: relative;
+    user-select: none;
+  }
+  .scale-opt:last-child { border-right: none; }
+  .scale-opt input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .scale-opt span { display: block; }
+  .scale-opt .scale-num { font-size: 15px; font-weight: 700; color: var(--ada-navy); }
+  .scale-opt .scale-label { font-size: 10px; color: var(--ada-muted); margin-top: 2px; font-weight: 400; }
+  .scale-opt:has(input:checked) {
+    background: var(--ada-blue);
+    color: white;
+  }
+  .scale-opt:has(input:checked) .scale-num { color: white; }
+  .scale-opt:has(input:checked) .scale-label { color: rgba(255,255,255,.75); }
+  .scale-opt:hover:not(:has(input:checked)) { background: var(--ada-light); }
+
+  /* ── TABLE DE TIEMPOS ── */
+  .time-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-top: 10px;
+  }
+  .time-table th {
+    background: var(--ada-navy);
+    color: white;
+    font-family: 'Sora', sans-serif;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: .04em;
+    padding: 10px 14px;
+    text-align: left;
+  }
+  .time-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--ada-border);
+    vertical-align: middle;
+  }
+  .time-table tr:last-child td { border-bottom: none; }
+  .time-table tr:nth-child(even) td { background: var(--ada-grey); }
+  .time-table td:first-child { font-weight: 500; color: var(--ada-navy); }
+  .time-table td:nth-child(2) { color: var(--ada-muted); font-family: 'Sora', sans-serif; font-weight: 600; }
+  .time-table select { width: 120px; font-size: 12px; padding: 5px 8px; }
+
+  /* ── DIVIDER ── */
+  .divider {
+    height: 1px;
+    background: var(--ada-border);
+    margin: 20px 0;
+  }
+
+  /* ── PHASE INNER GRID ── */
+  .phase-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-top: 6px;
+  }
+  @media (max-width: 700px) { .phase-grid { grid-template-columns: 1fr; } }
+
+  /* ── CALLOUT INFO ── */
+  .callout {
+    background: var(--ada-light);
+    border-left: 4px solid var(--ada-blue);
+    border-radius: 0 8px 8px 0;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--ada-navy);
+    margin-bottom: 24px;
+  }
+  .callout strong { color: var(--ada-blue); }
+
+  /* ── CONDITIONAL ── */
+  .conditional { display: none; margin-top: 4px; }
+  .conditional.show { display: block; animation: fadeIn .2s ease; }
+
+  /* ── NAV BUTTONS ── */
+  .nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 36px;
+    padding-top: 24px;
+    border-top: 1px solid var(--ada-border);
+  }
+  .btn {
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 11px 28px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: all .2s;
+    letter-spacing: .03em;
+  }
+  .btn-primary {
+    background: var(--ada-blue);
+    color: white;
+    box-shadow: 0 4px 12px rgba(20,96,170,.3);
+  }
+  .btn-primary:hover { background: #0D4F97; transform: translateY(-1px); }
+  .btn-secondary {
+    background: var(--ada-white);
+    color: var(--ada-blue);
+    border: 1.5px solid var(--ada-blue);
+  }
+  .btn-secondary:hover { background: var(--ada-light); }
+  .btn-success {
+    background: var(--ada-teal);
+    color: white;
+    box-shadow: 0 4px 12px rgba(0,168,150,.3);
+  }
+  .btn-success:hover { background: #008A7C; transform: translateY(-1px); }
+  .btn:disabled { opacity: .4; cursor: not-allowed; transform: none !important; }
+
+  /* ── COMPLETION ── */
+  .completion {
+    text-align: center;
+    padding: 60px 40px;
+  }
+  .completion-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+  }
+  .completion h2 {
+    font-family: 'Sora', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--ada-navy);
+    margin-bottom: 12px;
+  }
+  .completion p {
+    color: var(--ada-muted);
+    font-size: 15px;
+    max-width: 480px;
+    margin: 0 auto 28px;
+  }
+
+  /* ── PRINT ── */
+  @media print {
+    .header, .stepper-wrap, .nav-buttons { display: none; }
+    .section { display: block !important; }
+    .phase-body { display: block !important; }
+  }
+
+  /* ── REQUIRED MARK ── */
+  .req { color: var(--ada-red); margin-left: 2px; }
+
+  /* ── SECTION INTRO ── */
+  .intro-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #FFF3E0;
+    border: 1px solid #F59E0B;
+    color: #92400E;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+
+  .phase-status {
+    font-size: 11px;
+    color: var(--ada-teal);
+    font-weight: 600;
+    margin-left: auto;
+    opacity: 0;
+    transition: opacity .3s;
+  }
+  .phase-card.open .phase-status { opacity: 0; }
+
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-inner">
+    <div class="header-logo" style="border-right:2px solid rgba(255,255,255,.2); padding-right:20px;">
+      <img src="data:image/png;base64,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rbRGOWlq2edLTN+9I+k30eIVdUWdlUbFiReFkoPKLy4tatEqzGqu14tl1Lb6e5SmS4yx1rYqipYTuYnPfs5revc3Zb5jE2mOEWP4Ox26Y3bKcDfzKuMl59Ljzczj6yV5vIuWWi3dyZ0R1WP4S7uoGTab3cyw5RrFVyUZ35rbbHiKNw+9JjbzOH8pyjj498N+KgusGB1N9qGno6sZzAn0h0pd+hVpRaR0qSxl/kUlqG3nCLDXzimyFsBpMRxmz2KnA2jPZ9o9o9nRv5lFeXapZ/lRe29ZRcJoX98DJOzi/qN2C01FrCmuHSM5Wzl2z9cS4kuJJPeSvxEWpmEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAFYjgiwb4ZzWpzCth5qOzN5KfmHR1Q8d/4rdz7SFXunhlqKiOnhYXyyODGNHeSTsAvSLRDDIsD02tVgDAKoR9tWOHe6d/V32dG+xoXHrbdleF2zp0te6efY3VEXBcaynt9vqK+rlbFT08bpZXuOwa1o3JXjHqFbuObOfIMfocGoptp7gRU1oaeohafNaf5Thv8AiKni2nVjLqjONQLrkk5dyVMxFOw/Qhb0Y31dACfWStWXvaer060jx7rN82winjhd0exzUy23iuv1VXR+QVEcTI6dwaHBzSTudt/BTxFwwaUsaA+huch9Lq54/QqWauuuW1l4aac1lFD0V66zhc0ulYRBBdad33zawu/StSv3CJZpInuseV1sEp+S2qha9g97dioWtqZL0tiOvwH5j2tDd8IqpfOhPl1GCfonZsgHsPKfeVaVU9w7RXUzSrUe1ZRb4Ke90FNOGVPkUn3R8L/Nf9zPU7NJPtAVwWkOaHDfqN+q87VbXPdF8M7dPuUNsl0fqqBx24d5JfbVmtLFtFWs8jqyB0EjerCfWW7j8UK360jXTEG5vpdebG2MPqjCZ6Tp1EzPObt7duX3quns9OxMtdDfBo820X1Ix0b3MeCHNJBB8Cvle8eOEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAR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19ud70q+IMmPUsMHksdP5S2oJdszbry8vq9KhlFPowwljoepLLeeyTtF9acn0yElHRRw3G0zP7SSincWgO8XMcPkk+PQj1KQsl4tMkr30os+OUtqijla+oDqozvlaDuWh3I0NB8ehKreirLT1ylua5JjdOKwmSdrFrFddRL3Zrv8HR2eptIPYOgmLzzFwcDuQNttlIlDxYXR9ijor9hNtu1Yxo/zg1HIwuHc4xljuvsI9yraiPT1tJNdBXTTbz2T/NxRZRWYvc7Nc7FQVL6+KeHtmSmMRMkaWhrW7H5IPieqwOj+u1y05xCox2lsFNXxzTPlMsk5YQXDbbYNKh5E/V68YwPWnnOTddM9SL3gObS5NaGQvdUc7amml35JY3O5i0kdRsdiD6lL2TcW2Q19DHBZsYprVLztMsz6wzlzQQS1o5Ghu+225371WxEnRXN5kiI2zisJkr6461XDVK1W631ljp7c2hndM10c5eXczdtuoGy72kXENluBWuOyz00F8tMPSGGeQskiH3rZAD5vqIKhpFPoV7dmOB6s927PJPeq/Etdc3xaqx2mxWgttLVt5ZnzT+VP29Ld2NDT69isVcNfLnV6Q/udHH6VlP5A2i8q8oJds3bzuXl7+npUMooWnrSSSJd028tk36Q8Rd/wXG48cr7NT362QAtp2vnMMkbT3t5uVwLe/pt496zcHFXkFNeXTUeK2yltQjLY7fFJygOJ353PDep9gCrqih6apttoK+xLCZntQckly/M7pks9KylkuE5mdCx3MGdANt+m/csCiLZJJYRm3l5YREUkBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQH//Z" alt="Junta de Andalucía · ADA · Minsait" style="height:43px; width:auto; display:block;">
+    </div>
+    <div class="header-title">
+      <h1>Consultoría sobre Capacidades de IA en Proyectos de Dato</h1>
+      <p>Formulario de identificación · Gobierno del Dato · 2026</p>
+    </div>
+    <div class="header-badge">Uso interno</div>
+  </div>
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressBar"></div></div>
+</header>
+
+<!-- STEPPER -->
+<div class="stepper-wrap">
+  <nav class="stepper">
+    <button class="step-btn active" onclick="goTo(0)">
+      <span class="step-num">0</span>Instrucciones
+    </button>
+    <button class="step-btn" onclick="goTo(1)">
+      <span class="step-num">1</span>Perfil
+    </button>
+    <button class="step-btn" onclick="goTo(2)">
+      <span class="step-num">2</span>Ciclo de Vida
+    </button>
+    <button class="step-btn" onclick="goTo(3)">
+      <span class="step-num">3</span>Herramientas Generales
+    </button>
+    <button class="step-btn" onclick="goTo(4)">
+      <span class="step-num">4</span>F1 · Requisitos
+    </button>
+    <button class="step-btn" onclick="goTo(5)">
+      <span class="step-num">5</span>F2 · Arquitectura
+    </button>
+    <button class="step-btn" onclick="goTo(6)">
+      <span class="step-num">6</span>F3 · Ing. del Dato
+    </button>
+    <button class="step-btn" onclick="goTo(7)">
+      <span class="step-num">7</span>F4 · Analítica
+    </button>
+    <button class="step-btn" onclick="goTo(8)">
+      <span class="step-num">8</span>F5 · Visualización
+    </button>
+    <button class="step-btn" onclick="goTo(9)">
+      <span class="step-num">9</span>F6 · Pruebas
+    </button>
+    <button class="step-btn" onclick="goTo(10)">
+      <span class="step-num">10</span>F7 · Coordinación
+    </button>
+    <button class="step-btn" onclick="goTo(11)">
+      <span class="step-num">✓</span>Cierre
+    </button>
+  </nav>
+</div>
+
+<!-- MAIN -->
+<main class="main">
+
+<!-- ══════════════════════════════════════════ -->
+<!-- SECCIÓN 0: INSTRUCCIONES -->
+<!-- ══════════════════════════════════════════ -->
+<section class="section active" id="sec-0">
+  <div class="sec-header">
+    <div class="sec-tag">Bienvenida</div>
+    <h2>Formulario de Identificación de IA en el Ciclo de Vida del Proyecto de Dato</h2>
+    <p>Este cuestionario tiene como objetivo recopilar información sobre el uso de herramientas de inteligencia artificial en las distintas fases de un proyecto estándar de datos. Sus respuestas son esenciales para identificar oportunidades de mejora y eficiencia.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🎯 Objetivo del formulario</div>
+    <div style="margin-top:12px; font-size:13.5px; color:var(--ada-text); line-height:1.8;">
+      En el contexto del caso de uso <strong>Consultoría sobre Capacidades de IA</strong> desarrollado para la <strong>Agencia Digital de Andalucía</strong>, este formulario recoge información estructurada en dos grandes bloques:
+      <ul style="margin-top:10px; margin-left:20px; display:flex; flex-direction:column; gap:6px;">
+        <li><strong>Bloque A — Validación del ciclo de vida:</strong> Reflexionar sobre si las fases, tareas y tiempos del ciclo de vida identificado son representativos de la realidad de vuestros proyectos.</li>
+        <li><strong>Bloque B — Herramientas de IA:</strong> Identificar qué herramientas de IA se usan actualmente, en qué fases y con qué nivel de adopción, esfuerzo e impacto.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📋 Instrucciones de cumplimentación</div>
+    <div style="margin-top:12px; font-size:13.5px; color:var(--ada-text); line-height:1.8;">
+      <ul style="margin-left:20px; display:flex; flex-direction:column; gap:6px;">
+        <li>El formulario está dividido en <strong>12 secciones</strong>. Puede navegar entre ellas usando los botones de la barra superior o los botones <em>Siguiente / Anterior</em>.</li>
+        <li>Responda desde su experiencia real en proyectos de datos de la Administración Pública. No hay respuestas correctas o incorrectas.</li>
+        <li>Las preguntas marcadas con <span class="req">*</span> son de especial interés, aunque el formulario no bloquea su avance si no las responde.</li>
+        <li>Si en alguna fase no ha trabajado directamente, puede indicarlo en el campo de observaciones y avanzar.</li>
+        <li>Duración estimada: <strong>25-35 minutos</strong>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" style="background:var(--ada-light); border-color:#B3D4F0;">
+    <div class="card-title" style="color:var(--ada-blue);">🔒 Confidencialidad</div>
+    <p style="font-size:13px; margin-top:10px; color:var(--ada-navy);">La información recogida en este formulario es de uso exclusivo interno para el caso de uso de Consultoría de Capacidades IA y será tratada de forma agregada y anónima en el análisis de resultados.</p>
+  </div>
+
+  <div class="nav-buttons">
+    <span></span>
+    <button class="btn btn-primary" onclick="goTo(1)">Comenzar →</button>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════ -->
+<!-- SECCIÓN 1: PERFIL -->
+<!-- ══════════════════════════════════════════ -->
+<section class="section" id="sec-1">
+  <div class="sec-header">
+    <div class="sec-tag">Sección 1 de 11</div>
+    <h2>Perfil del Respondente</h2>
+    <p>Información básica para contextualizar las respuestas. Esta sección no es identificativa en el análisis agregado.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="q-num">P1</span>Rol o perfil profesional principal<span class="req">*</span></div>
+    <div class="card-sub">Selecciona el que mejor describe tu función habitual en proyectos de datos</div>
+    <div class="radio-group">
+      <label class="radio-opt"><input type="radio" name="p1" value="gestor"> Gestor/a de proyecto</label>
+      <label class="radio-opt"><input type="radio" name="p1" value="arquitecto"> Arquitecto/a de datos</label>
+      <label class="radio-opt"><input type="radio" name="p1" value="ingeniero"> Ingeniero/a de datos</label>
+      <label class="radio-opt"><input type="radio" name="p1" value="analitico"> Analista / Científico de datos</label>
+      <label class="radio-opt"><input type="radio" name="p1" value="bi"> Desarrollador/a BI / Visualización</label>
+      <label class="radio-opt"><input type="radio" name="p1" value="qa"> Consultor/a funcional / QA</label>
+      <label class="radio-opt"><input type="radio" name="p1" value="gobierno"> Gobierno del dato</label>
+      <label class="radio-opt"><input type="radio" name="p1" value="otro"> Otro</label>
+    </div>
+    <div class="conditional" id="cond-p1">
+      <label class="q-label">Especifica tu rol</label>
+      <input type="text" placeholder="Describe tu rol...">
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="q-num">P2</span>Años de experiencia en proyectos de datos</div>
+    <div class="radio-group">
+      <label class="radio-opt"><input type="radio" name="p2" value="1"> Menos de 1 año</label>
+      <label class="radio-opt"><input type="radio" name="p2" value="1-3"> 1 – 3 años</label>
+      <label class="radio-opt"><input type="radio" name="p2" value="3-5"> 3 – 5 años</label>
+      <label class="radio-opt"><input type="radio" name="p2" value="5-10"> 5 – 10 años</label>
+      <label class="radio-opt"><input type="radio" name="p2" value="10+"> Más de 10 años</label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="q-num">P3</span>Tipo de equipo / organización en la que trabajas habitualmente</div>
+    <div class="radio-group">
+      <label class="radio-opt"><input type="radio" name="p3" value="interno"> Equipo interno (cliente / Administración)</label>
+      <label class="radio-opt"><input type="radio" name="p3" value="proveedor"> Equipo externo (proveedor / consultora)</label>
+      <label class="radio-opt"><input type="radio" name="p3" value="mixto"> Equipo mixto</label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="q-num">P4</span>Tecnologías de datos con las que trabajas habitualmente</div>
+    <div class="card-sub">Selecciona todas las que apliquen</div>
+    <div class="task-chips" style="margin-top:10px;">
+      <label class="task-chip"><input type="checkbox"> Microsoft Fabric</label>
+      <label class="task-chip"><input type="checkbox"> Azure Synapse</label>
+      <label class="task-chip"><input type="checkbox"> Power BI</label>
+      <label class="task-chip"><input type="checkbox"> Microsoft Purview</label>
+      <label class="task-chip"><input type="checkbox"> Azure Data Factory</label>
+      <label class="task-chip"><input type="checkbox"> Databricks</label>
+      <label class="task-chip"><input type="checkbox"> Spark / PySpark</label>
+      <label class="task-chip"><input type="checkbox"> SQL / T-SQL</label>
+      <label class="task-chip"><input type="checkbox"> Python</label>
+      <label class="task-chip"><input type="checkbox"> Power Apps</label>
+      <label class="task-chip" id="chip-otras-cloud"><input type="checkbox" onchange="toggleCond('cond-otras-cloud', this.checked)"> Otras plataformas cloud</label>
+    </div>
+    <div class="conditional" id="cond-otras-cloud" style="margin-top:10px;">
+      <input type="text" name="p4_otras" placeholder="Indica qué otras plataformas cloud utilizas...">
+    </div>
+  </div>
+
+  <div class="nav-buttons">
+    <button class="btn btn-secondary" onclick="goTo(0)">← Anterior</button>
+    <button class="btn btn-primary" onclick="goTo(2)">Siguiente →</button>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════ -->
+<!-- SECCIÓN 2: CICLO DE VIDA -->
+<!-- ══════════════════════════════════════════ -->
+<section class="section" id="sec-2">
+  <div class="sec-header">
+    <div class="sec-tag">Sección 2 de 11 · Bloque A</div>
+    <h2>Validación del Ciclo de Vida del Proyecto de Dato</h2>
+    <p>Antes de identificar herramientas de IA, queremos contrastar que el ciclo de vida definido sea representativo. Este bloque nos ayuda a entender si faltan fases, tareas o si los tiempos estimados son realistas.</p>
+  </div>
+
+  <div class="callout" style="padding:0; overflow:hidden;">
+    <button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'; this.querySelector('.chev').style.transform=this.nextElementSibling.style.display==='block'?'rotate(180deg)':'rotate(0deg)'" style="width:100%;background:none;border:none;cursor:pointer;padding:12px 16px;display:flex;align-items:center;gap:10px;text-align:left;font-family:'Sora',sans-serif;font-size:13px;font-weight:600;color:var(--ada-blue);">
+      <strong style="flex:1;">📋 Ciclo de vida de referencia — Haz clic para ver todas las fases y tareas</strong>
+      <span class="chev" style="transition:transform .2s;font-size:16px;color:var(--ada-blue);">▾</span>
+    </button>
+    <div style="display:none; padding:0 16px 14px; border-top:1px solid var(--ada-border);">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px;">
+        <div>
+          <div style="font-size:11px;font-weight:700;color:var(--ada-navy);margin-bottom:5px;">F1 · Identificación de necesidades y requisitos</div>
+          <div style="font-size:11px;color:var(--ada-muted);line-height:1.7;">A.1.1.1 Sesiones con negocio para identificar requisitos funcionales<br>A.1.1.2 Identificación de fuentes de datos y restricciones<br>A.1.1.3 Análisis preliminar del modelo conceptual<br>A.1.1.4 Diseño funcional</div>
+        </div>
+        <div>
+          <div style="font-size:11px;font-weight:700;color:var(--ada-navy);margin-bottom:5px;">F2 · Arquitectura y preparación de la infraestructura</div>
+          <div style="font-size:11px;color:var(--ada-muted);line-height:1.7;">A.2.1.1 Análisis de la arquitectura necesaria<br>A.2.1.2 Diseño de la arquitectura<br>A.2.1.3 Definición de entornos (desarrollo, pruebas y producción)<br>A.2.1.4 Validación técnica y documentación<br>A.2.2.1 Configuración de la arquitectura de datos dentro de la plataforma<br>A.2.2.2 Levantamiento de herramientas de monitorización, control de errores y trazabilidad<br>A.2.2.3 Definición del modelo de despliegue de CICD<br>A.2.2.4 Levantamiento de las herramientas de CICD<br>A.2.2.5 Documentación técnica y operativa</div>
+        </div>
+        <div>
+          <div style="font-size:11px;font-weight:700;color:var(--ada-navy);margin-bottom:5px;">F3 · Ingeniería del dato y modelado</div>
+          <div style="font-size:11px;color:var(--ada-muted);line-height:1.7;">A.3.1.1 Ingesta inicial de datos desde los sistemas origen<br>A.3.1.2 Limpieza, transformación y estandarización de la información (procesos de dataquality)<br>A.3.1.3 Construcción del datalake/lakehouse por capas (datos crudos, preparados y listos para consumo)<br>A.3.1.4 Creación del modelo de datos final que usará el negocio<br>A.3.1.5 Pruebas unitarias y validación de que los datos son correctos</div>
+        </div>
+        <div>
+          <div style="font-size:11px;font-weight:700;color:var(--ada-navy);margin-bottom:5px;">F4 · Procesos de analítica avanzada</div>
+          <div style="font-size:11px;color:var(--ada-muted);line-height:1.7;">A.4.1.1 Diseño de los procesos<br>A.4.1.2 Construcción de los procesos de analítica avanzada<br>A.4.1.3 Pruebas unitarias y validación</div>
+        </div>
+        <div>
+          <div style="font-size:11px;font-weight:700;color:var(--ada-navy);margin-bottom:5px;">F5 · Visualización</div>
+          <div style="font-size:11px;color:var(--ada-muted);line-height:1.7;">A.5.1.1 Elaboración del prototipo de Dashboard<br>A.5.1.2 Sesión de aprobación del prototipo<br>A.5.1.3 Desarrollo de visualizaciones<br>A.5.1.4 Construcción de dashboards<br>A.5.1.5 Sesiones de validación con usuarios<br>A.5.1.6 Corrección de incidencias</div>
+        </div>
+        <div>
+          <div style="font-size:11px;font-weight:700;color:var(--ada-navy);margin-bottom:5px;">F6 · Pruebas de usuario y paso a soporte</div>
+          <div style="font-size:11px;color:var(--ada-muted);line-height:1.7;">A.6.1.1 Finalización de los Manuales de Usuario<br>A.6.1.2 Sesiones de validación con usuarios<br>A.6.1.3 Corrección de incidencias y ajustes<br>A.6.2.1 Finalización de la Documentación técnica<br>A.6.2.2 Despliegue en Producción<br>A.6.2.3 Sesiones de paso a soporte y traspaso de conocimiento<br>A.6.2.4 Activación del servicio de soporte</div>
+        </div>
+        <div style="grid-column:1/-1;">
+          <div style="font-size:11px;font-weight:700;color:var(--ada-navy);margin-bottom:5px;">F7 · Coordinación, adopción y mejora continua</div>
+          <div style="font-size:11px;color:var(--ada-muted);line-height:1.7;">A.7.1.1 Reuniones de seguimiento y gestión del cambio<br>A.7.1.2 Identificación de mejoras y nuevas iteraciones<br>A.7.1.3 Atención de peticiones, consultas y resolución de incidencias<br>A.7.1.4 Gestión de conocimiento y documentación viva<br>A.7.1.5 Formación y adaptación</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="q-num">C1</span>¿Las 7 fases identificadas representan de forma completa el ciclo de vida habitual de vuestros proyectos de datos?<span class="req">*</span></div>
+    <div class="radio-group">
+      <label class="radio-opt"><input type="radio" name="c1" value="si" onchange="toggleCond('cond-c1-si', true); toggleCond('cond-c1-no', false)"> Sí, están bien definidas</label>
+      <label class="radio-opt"><input type="radio" name="c1" value="parcial" onchange="toggleCond('cond-c1-si', true); toggleCond('cond-c1-no', false)"> Parcialmente, faltaría algo</label>
+      <label class="radio-opt"><input type="radio" name="c1" value="no" onchange="toggleCond('cond-c1-si', true); toggleCond('cond-c1-no', false)"> No, hay fases que no encajan</label>
+    </div>
+    <div class="conditional" id="cond-c1-si">
+      <label class="q-label">¿Añadirías, eliminarías o renombrarías alguna fase? Descríbelo</label>
+      <textarea placeholder="Ej: Añadiría una fase de 'Gestión de cambio y adopción' entre la F6 y F7..."></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="q-num">C2</span>¿Las tareas definidas dentro de cada fase son suficientemente representativas?<span class="req">*</span></div>
+    <div class="radio-group">
+      <label class="radio-opt"><input type="radio" name="c2" value="si" onchange="toggleCond('cond-c2',false)"> Sí, cubren lo esencial</label>
+      <label class="radio-opt"><input type="radio" name="c2" value="parcial" onchange="toggleCond('cond-c2',true)"> Faltan algunas tareas relevantes</label>
+      <label class="radio-opt"><input type="radio" name="c2" value="no" onchange="toggleCond('cond-c2',true)"> Hay tareas que no deberían estar o están mal agrupadas</label>
+    </div>
+    <div class="conditional" id="cond-c2">
+      <label class="q-label">Indica qué tareas añadirías, eliminarías o reubicarías</label>
+      <textarea placeholder="Ej: En F3 añadiría una tarea de 'Validación de linaje de datos'. En F6 eliminaría la tarea de formación porque la haríamos en F7..."></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="q-num">C3</span>Valoración de los tiempos estimados por fase<span class="req">*</span></div>
+    <div class="card-sub">El peso relativo indica la proporción del esfuerzo total del proyecto. Indica si te parece adecuado, corto o largo para proyectos habituales en tu contexto.</div>
+    <table class="time-table">
+      <thead>
+        <tr>
+          <th>Fase</th>
+          <th>Peso est.</th>
+          <th>Valoración del tiempo</th>
+          <th>Observaciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>F1 · Identificación de necesidades y requisitos</td>
+          <td>10%</td>
+          <td><select name="c3_f1"><option value="">—</option><option>Corto</option><option>Adecuado</option><option>Largo</option></select></td>
+          <td><input type="text" name="c3_f1_obs" placeholder="Opcional..."></td>
+        </tr>
+        <tr>
+          <td>F2 · Arquitectura y preparación de infraestructura</td>
+          <td>20%</td>
+          <td><select name="c3_f2"><option value="">—</option><option>Corto</option><option>Adecuado</option><option>Largo</option></select></td>
+          <td><input type="text" name="c3_f2_obs" placeholder="Opcional..."></td>
+        </tr>
+        <tr>
+          <td>F3 · Ingeniería del dato y modelado</td>
+          <td>30%</td>
+          <td><select name="c3_f3"><option value="">—</option><option>Corto</option><option>Adecuado</option><option>Largo</option></select></td>
+          <td><input type="text" name="c3_f3_obs" placeholder="Opcional..."></td>
+        </tr>
+        <tr>
+          <td>F4 · Procesos de analítica avanzada</td>
+          <td>15%</td>
+          <td><select name="c3_f4"><option value="">—</option><option>Corto</option><option>Adecuado</option><option>Largo</option></select></td>
+          <td><input type="text" name="c3_f4_obs" placeholder="Opcional..."></td>
+        </tr>
+        <tr>
+          <td>F5 · Visualización</td>
+          <td>15%</td>
+          <td><select name="c3_f5"><option value="">—</option><option>Corto</option><option>Adecuado</option><option>Largo</option></select></td>
+          <td><input type="text" name="c3_f5_obs" placeholder="Opcional..."></td>
+        </tr>
+        <tr>
+          <td>F6 · Pruebas y paso a soporte</td>
+          <td>7%</td>
+          <td><select name="c3_f6"><option value="">—</option><option>Corto</option><option>Adecuado</option><option>Largo</option></select></td>
+          <td><input type="text" name="c3_f6_obs" placeholder="Opcional..."></td>
+        </tr>
+        <tr>
+          <td>F7 · Coordinación y mejora continua</td>
+          <td>3%</td>
+          <td><select name="c3_f7"><option value="">—</option><option>Corto</option><option>Adecuado</option><option>Largo</option></select></td>
+          <td><input type="text" name="c3_f7_obs" placeholder="Opcional..."></td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="margin-top:16px; padding-top:14px; border-top:1px solid var(--ada-border);">
+      <label class="q-label" style="margin-top:0;"><span class="q-num" style="font-size:11px;color:white;background:var(--ada-blue);padding:2px 7px;border-radius:4px;font-family:'Sora',sans-serif;font-weight:700;">C4</span> ¿Hay alguna fase donde el esfuerzo real difiere significativamente del estimado?</label>
+      <textarea name="c4" placeholder="Describe qué fases o tareas suelen desviarse y en qué sentido..."></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="q-num">C5</span>¿Existen condicionantes específicos de la Administración Pública que afectan a los tiempos o fases del proyecto?</div>
+    <div class="card-sub">Por ejemplo: procesos de aprobación, pliegos técnicos, plataformas corporativas obligatorias, ciclos de contratación, etc.</div>
+    <div class="radio-group" style="margin-bottom:12px;">
+      <label class="radio-opt"><input type="radio" name="c5" value="si" onchange="toggleCond('cond-c5',true)"> Sí</label>
+      <label class="radio-opt"><input type="radio" name="c5" value="no" onchange="toggleCond('cond-c5',false)"> No</label>
+    </div>
+    <div class="conditional" id="cond-c5">
+      <textarea placeholder="Describe los condicionantes más relevantes..."></textarea>
+    </div>
+  </div>
+
+  <div class="nav-buttons">
+    <button class="btn btn-secondary" onclick="goTo(1)">← Anterior</button>
+    <button class="btn btn-primary" onclick="goTo(3)">Siguiente →</button>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════ -->
+<!-- SECCIÓN 3: HERRAMIENTAS GENERALES -->
+<!-- ══════════════════════════════════════════ -->
+<section class="section" id="sec-3">
+  <div class="sec-header">
+    <div class="sec-tag">Sección 3 de 11 · Bloque B</div>
+    <h2>Herramientas de IA de Uso Transversal</h2>
+    <p>Antes de entrar en el detalle por fases, queremos identificar si existe alguna herramienta de IA que el equipo utiliza de forma general, sin estar vinculada a una fase concreta del ciclo de vida.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="q-num">G1</span>¿Tu equipo utiliza alguna herramienta de IA de manera transversal en proyectos de datos (no ligada a una sola fase)?<span class="req">*</span></div>
+    <div class="radio-group">
+      <label class="radio-opt"><input type="radio" name="g1" value="si" onchange="toggleCond('cond-g1',true);toggleCond('cond-g2',true)"> Sí</label>
+      <label class="radio-opt"><input type="radio" name="g1" value="no" onchange="toggleCond('cond-g1',false);toggleCond('cond-g2',false)"> No</label>
+      <label class="radio-opt"><input type="radio" name="g1" value="desconoce" onchange="toggleCond('cond-g1',false);toggleCond('cond-g2',true)"> No lo sé con certeza</label>
+    </div>
+    <div class="conditional" id="cond-g1">
+      <label class="q-label">¿Qué herramientas? (nombre y breve descripción de para qué las usáis)</label>
+      <textarea placeholder="Ej: GitHub Copilot para desarrollo de código en general; ChatGPT / Microsoft Copilot para redacción de documentación y reuniones..."></textarea>
+    </div>
+  </div>
+
+  <div class="conditional" id="cond-g2">
+  <div class="card">
+    <div class="card-title"><span class="q-num">G2</span>Si usáis herramientas transversales de IA, ¿cuál es su nivel de implantación en el equipo?</div>
+    <div class="card-sub">Estima el porcentaje aproximado de miembros del equipo que las usan de forma habitual</div>
+    <div class="radio-group">
+      <label class="radio-opt"><input type="radio" name="g2" value="25"> &lt;25% del equipo</label>
+      <label class="radio-opt"><input type="radio" name="g2" value="50"> 25-50% del equipo</label>
+      <label class="radio-opt"><input type="radio" name="g2" value="75"> 50-75% del equipo</label>
+      <label class="radio-opt"><input type="radio" name="g2" value="100"> +75% del equipo</label>
+    </div>
+  </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="q-num">G3</span>¿Qué factores han impulsado o dificultado la adopción de IA en vuestro equipo?</div>
+    <div class="card-sub">Selecciona todos los que apliquen</div>
+    <div style="margin-top:14px;">
+      <div style="font-size:12px; font-weight:600; color:var(--ada-teal); margin-bottom:8px; text-transform:uppercase; letter-spacing:.05em;">✅ Factores que impulsan la adopción</div>
+      <div class="task-chips">
+        <label class="task-chip"><input type="checkbox"> Mejora clara de productividad</label>
+        <label class="task-chip"><input type="checkbox"> Soporte de la dirección</label>
+        <label class="task-chip"><input type="checkbox"> Herramientas disponibles en el entorno corporativo</label>
+        <label class="task-chip"><input type="checkbox"> Formación o iniciativas internas</label>
+        <label class="task-chip"><input type="checkbox"> Iniciativa propia del equipo técnico</label>
+        <label class="task-chip"><input type="checkbox"> Experiencias positivas previas</label>
+      </div>
+    </div>
+    <div style="margin-top:14px;">
+      <div style="font-size:12px; font-weight:600; color:var(--ada-red); margin-bottom:8px; text-transform:uppercase; letter-spacing:.05em;">❌ Factores que dificultan la adopción</div>
+      <div class="task-chips">
+        <label class="task-chip"><input type="checkbox"> Restricciones de seguridad / normativa</label>
+        <label class="task-chip"><input type="checkbox"> Falta de herramientas habilitadas corporativamente</label>
+        <label class="task-chip"><input type="checkbox"> Desconocimiento de las capacidades disponibles</label>
+        <label class="task-chip"><input type="checkbox"> Desconfianza en la calidad de los resultados</label>
+        <label class="task-chip"><input type="checkbox"> Curva de aprendizaje elevada</label>
+        <label class="task-chip"><input type="checkbox"> Falta de tiempo para explorar nuevas herramientas</label>
+        <label class="task-chip"><input type="checkbox"> No hay un caso de uso claro</label>
+      </div>
+    </div>
+    <label class="q-label">Observaciones adicionales</label>
+    <textarea placeholder="Si quieres ampliar alguno de los factores indicados..."></textarea>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="q-num">G4</span>¿Existe alguna política o guía interna sobre el uso de herramientas de IA en proyectos?</div>
+    <div class="radio-group">
+      <label class="radio-opt"><input type="radio" name="g4" value="si_formal"> Sí, hay una política formal</label>
+      <label class="radio-opt"><input type="radio" name="g4" value="si_informal"> Sí, pero informal / no documentada</label>
+      <label class="radio-opt"><input type="radio" name="g4" value="no"> No existe ninguna política</label>
+      <label class="radio-opt"><input type="radio" name="g4" value="desconoce"> No lo sé</label>
+    </div>
+  </div>
+
+  <div class="nav-buttons">
+    <button class="btn btn-secondary" onclick="goTo(2)">← Anterior</button>
+    <button class="btn btn-primary" onclick="goTo(4)">Siguiente →</button>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════ -->
+<!-- MACRO: FASE (reutilizable con JS)         -->
+<!-- ══════════════════════════════════════════ -->
+
+<!-- SECCIÓN 4: FASE 1 -->
+<section class="section" id="sec-4">
+  <div class="sec-header">
+    <div class="sec-tag">Sección 4 de 11 · Fase 1</div>
+    <h2>F1 · Identificación de necesidades y toma de requisitos funcionales</h2>
+    <details style="margin-top:8px;"><summary style="cursor:pointer;font-size:12px;color:var(--ada-blue);font-weight:600;list-style:none;display:flex;align-items:center;gap:6px;"><span>📋 Haz clic para ver las tareas de referencia de esta fase</span></summary><div style="margin-top:8px;padding:10px 14px;background:var(--ada-light);border-radius:8px;font-size:11px;color:var(--ada-muted);line-height:1.8;">A.1.1.1 Sesiones con negocio para identificar requisitos funcionales<br>A.1.1.2 Identificación de fuentes de datos y restricciones<br>A.1.1.3 Análisis preliminar del modelo conceptual<br>A.1.1.4 Diseño funcional</div></details>
+  </div>
+  <div id="fase-1-content"></div>
+  <div class="nav-buttons">
+    <button class="btn btn-secondary" onclick="goTo(3)">← Anterior</button>
+    <button class="btn btn-primary" onclick="goTo(5)">Siguiente →</button>
+  </div>
+</section>
+
+<!-- SECCIÓN 5: FASE 2 -->
+<section class="section" id="sec-5">
+  <div class="sec-header">
+    <div class="sec-tag">Sección 5 de 11 · Fase 2</div>
+    <h2>F2 · Arquitectura y preparación de la infraestructura</h2>
+    <details style="margin-top:8px;"><summary style="cursor:pointer;font-size:12px;color:var(--ada-blue);font-weight:600;list-style:none;display:flex;align-items:center;gap:6px;"><span>📋 Haz clic para ver las tareas de referencia de esta fase</span></summary><div style="margin-top:8px;padding:10px 14px;background:var(--ada-light);border-radius:8px;font-size:11px;color:var(--ada-muted);line-height:1.8;">A.2.1.1 Análisis de la arquitectura necesaria<br>A.2.1.2 Diseño de la arquitectura<br>A.2.1.3 Definición de entornos (desarrollo, pruebas y producción)<br>A.2.1.4 Validación técnica y documentación<br>A.2.2.1 Configuración de la arquitectura de datos dentro de la plataforma<br>A.2.2.2 Levantamiento de herramientas de monitorización, control de errores y trazabilidad<br>A.2.2.3 Definición del modelo de despliegue de CICD<br>A.2.2.4 Levantamiento de las herramientas de CICD<br>A.2.2.5 Documentación técnica y operativa</div></details>
+  </div>
+  <div id="fase-2-content"></div>
+  <div class="nav-buttons">
+    <button class="btn btn-secondary" onclick="goTo(4)">← Anterior</button>
+    <button class="btn btn-primary" onclick="goTo(6)">Siguiente →</button>
+  </div>
+</section>
+
+<!-- SECCIÓN 6: FASE 3 -->
+<section class="section" id="sec-6">
+  <div class="sec-header">
+    <div class="sec-tag">Sección 6 de 11 · Fase 3</div>
+    <h2>F3 · Ingeniería del dato y modelado</h2>
+    <details style="margin-top:8px;"><summary style="cursor:pointer;font-size:12px;color:var(--ada-blue);font-weight:600;list-style:none;display:flex;align-items:center;gap:6px;"><span>📋 Haz clic para ver las tareas de referencia de esta fase</span></summary><div style="margin-top:8px;padding:10px 14px;background:var(--ada-light);border-radius:8px;font-size:11px;color:var(--ada-muted);line-height:1.8;">A.3.1.1 Ingesta inicial de datos desde los sistemas origen<br>A.3.1.2 Limpieza, transformación y estandarización de la información (procesos de dataquality)<br>A.3.1.3 Construcción del datalake/lakehouse por capas<br>A.3.1.4 Creación del modelo de datos final que usará el negocio<br>A.3.1.5 Pruebas unitarias y validación de que los datos son correctos</div></details>
+  </div>
+  <div id="fase-3-content"></div>
+  <div class="nav-buttons">
+    <button class="btn btn-secondary" onclick="goTo(5)">← Anterior</button>
+    <button class="btn btn-primary" onclick="goTo(7)">Siguiente →</button>
+  </div>
+</section>
+
+<!-- SECCIÓN 7: FASE 4 -->
+<section class="section" id="sec-7">
+  <div class="sec-header">
+    <div class="sec-tag">Sección 7 de 11 · Fase 4</div>
+    <h2>F4 · Procesos de analítica avanzada</h2>
+    <details style="margin-top:8px;"><summary style="cursor:pointer;font-size:12px;color:var(--ada-blue);font-weight:600;list-style:none;display:flex;align-items:center;gap:6px;"><span>📋 Haz clic para ver las tareas de referencia de esta fase</span></summary><div style="margin-top:8px;padding:10px 14px;background:var(--ada-light);border-radius:8px;font-size:11px;color:var(--ada-muted);line-height:1.8;">A.4.1.1 Diseño de los procesos<br>A.4.1.2 Construcción de los procesos de analítica avanzada<br>A.4.1.3 Pruebas unitarias y validación</div></details>
+  </div>
+  <div id="fase-4-content"></div>
+  <div class="nav-buttons">
+    <button class="btn btn-secondary" onclick="goTo(6)">← Anterior</button>
+    <button class="btn btn-primary" onclick="goTo(8)">Siguiente →</button>
+  </div>
+</section>
+
+<!-- SECCIÓN 8: FASE 5 -->
+<section class="section" id="sec-8">
+  <div class="sec-header">
+    <div class="sec-tag">Sección 8 de 11 · Fase 5</div>
+    <h2>F5 · Visualización y Dashboards</h2>
+    <details style="margin-top:8px;"><summary style="cursor:pointer;font-size:12px;color:var(--ada-blue);font-weight:600;list-style:none;display:flex;align-items:center;gap:6px;"><span>📋 Haz clic para ver las tareas de referencia de esta fase</span></summary><div style="margin-top:8px;padding:10px 14px;background:var(--ada-light);border-radius:8px;font-size:11px;color:var(--ada-muted);line-height:1.8;">A.5.1.1 Elaboración del prototipo de Dashboard<br>A.5.1.2 Sesión de aprobación del prototipo<br>A.5.1.3 Desarrollo de visualizaciones<br>A.5.1.4 Construcción de dashboards<br>A.5.1.5 Sesiones de validación con usuarios<br>A.5.1.6 Corrección de incidencias</div></details>
+  </div>
+  <div id="fase-5-content"></div>
+  <div class="nav-buttons">
+    <button class="btn btn-secondary" onclick="goTo(7)">← Anterior</button>
+    <button class="btn btn-primary" onclick="goTo(9)">Siguiente →</button>
+  </div>
+</section>
+
+<!-- SECCIÓN 9: FASE 6 -->
+<section class="section" id="sec-9">
+  <div class="sec-header">
+    <div class="sec-tag">Sección 9 de 11 · Fase 6</div>
+    <h2>F6 · Pruebas de usuario y paso a soporte</h2>
+    <details style="margin-top:8px;"><summary style="cursor:pointer;font-size:12px;color:var(--ada-blue);font-weight:600;list-style:none;display:flex;align-items:center;gap:6px;"><span>📋 Haz clic para ver las tareas de referencia de esta fase</span></summary><div style="margin-top:8px;padding:10px 14px;background:var(--ada-light);border-radius:8px;font-size:11px;color:var(--ada-muted);line-height:1.8;">A.6.1.1 Finalización de los Manuales de Usuario<br>A.6.1.2 Sesiones de validación con usuarios<br>A.6.1.3 Corrección de incidencias y ajustes<br>A.6.2.1 Finalización de la Documentación técnica<br>A.6.2.2 Despliegue en Producción<br>A.6.2.3 Sesiones de paso a soporte y traspaso de conocimiento<br>A.6.2.4 Activación del servicio de soporte</div></details>
+  </div>
+  <div id="fase-6-content"></div>
+  <div class="nav-buttons">
+    <button class="btn btn-secondary" onclick="goTo(8)">← Anterior</button>
+    <button class="btn btn-primary" onclick="goTo(10)">Siguiente →</button>
+  </div>
+</section>
+
+<!-- SECCIÓN 10: FASE 7 -->
+<section class="section" id="sec-10">
+  <div class="sec-header">
+    <div class="sec-tag">Sección 10 de 11 · Fase 7</div>
+    <h2>F7 · Coordinación, adopción y mejora continua</h2>
+    <details style="margin-top:8px;"><summary style="cursor:pointer;font-size:12px;color:var(--ada-blue);font-weight:600;list-style:none;display:flex;align-items:center;gap:6px;"><span>📋 Haz clic para ver las tareas de referencia de esta fase</span></summary><div style="margin-top:8px;padding:10px 14px;background:var(--ada-light);border-radius:8px;font-size:11px;color:var(--ada-muted);line-height:1.8;">A.7.1.1 Reuniones de seguimiento y gestión del cambio<br>A.7.1.2 Identificación de mejoras y nuevas iteraciones<br>A.7.1.3 Atención de peticiones, consultas y resolución de incidencias<br>A.7.1.4 Gestión de conocimiento y documentación viva<br>A.7.1.5 Formación y adaptación</div></details>
+  </div>
+  <div id="fase-7-content"></div>
+  <div class="nav-buttons">
+    <button class="btn btn-secondary" onclick="goTo(9)">← Anterior</button>
+    <button class="btn btn-primary" onclick="goTo(11)">Siguiente →</button>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════ -->
+<!-- SECCIÓN 11: CIERRE -->
+<!-- ══════════════════════════════════════════ -->
+<section class="section" id="sec-11">
+  <div class="sec-header">
+    <div class="sec-tag">Sección 11 de 11 · Cierre</div>
+    <h2>Reflexiones Finales y Visión de Futuro</h2>
+    <p>Para cerrar, nos interesa recoger tu visión global sobre el potencial de la IA en proyectos de datos y cualquier comentario adicional.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="q-num">Z1</span>¿En qué fases o tareas crees que la IA podría tener un mayor impacto en la productividad?<span class="req">*</span></div>
+    <div class="card-sub">Puedes seleccionar varias</div>
+    <div class="task-chips" style="margin-top:10px;">
+      <label class="task-chip"><input type="checkbox" name="z1" value="f1"> F1 · Requisitos</label>
+      <label class="task-chip"><input type="checkbox" name="z1" value="f2"> F2 · Arquitectura</label>
+      <label class="task-chip"><input type="checkbox" name="z1" value="f3"> F3 · Ing. del dato</label>
+      <label class="task-chip"><input type="checkbox" name="z1" value="f4"> F4 · Analítica</label>
+      <label class="task-chip"><input type="checkbox" name="z1" value="f5"> F5 · Visualización</label>
+      <label class="task-chip"><input type="checkbox" name="z1" value="f6"> F6 · Pruebas</label>
+      <label class="task-chip"><input type="checkbox" name="z1" value="f7"> F7 · Coordinación</label>
+      <label class="task-chip"><input type="checkbox" name="z1" value="transversal"> Transversal a todo</label>
+    </div>
+    <label class="q-label">¿Por qué? ¿Qué mejoría concreta imaginas?</label>
+    <textarea placeholder="Describe el escenario de mejora que visualizas..."></textarea>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="q-num">Z2</span>¿Qué capacidades de IA (no necesariamente herramientas concretas) crees que serían más valiosas en este tipo de proyectos?</div>
+    <div class="card-sub">Selecciona todas las que consideres relevantes</div>
+    <div class="task-chips" style="margin-top:10px;">
+      <label class="task-chip"><input type="checkbox"> Generación automática de código (SQL, Python, DAX...)</label>
+      <label class="task-chip"><input type="checkbox"> Asistentes de documentación técnica</label>
+      <label class="task-chip"><input type="checkbox"> Detección automática de anomalías en datos</label>
+      <label class="task-chip"><input type="checkbox"> Sugerencia automática de transformaciones de datos</label>
+      <label class="task-chip"><input type="checkbox"> Catalogación y enriquecimiento de metadatos</label>
+      <label class="task-chip"><input type="checkbox"> Generación de glosarios de negocio</label>
+      <label class="task-chip"><input type="checkbox"> Asistentes conversacionales sobre los datos</label>
+      <label class="task-chip"><input type="checkbox"> Resumen automático de reuniones y actas</label>
+      <label class="task-chip"><input type="checkbox"> Generación automática de tests y pruebas</label>
+      <label class="task-chip"><input type="checkbox"> Diseño asistido de modelos de datos</label>
+      <label class="task-chip"><input type="checkbox"> Prototipado automático de dashboards</label>
+      <label class="task-chip"><input type="checkbox"> Generación de informes o presentaciones</label>
+      <label class="task-chip"><input type="checkbox"> Clasificación y linaje automático de datos</label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="q-num">Z3</span>Valoración global del potencial de la IA en vuestros proyectos de datos</div>
+    <div class="card-sub">Siendo 1 "muy bajo potencial" y 5 "transformador"</div>
+    <div class="scale-wrap">
+      <label class="scale-opt"><input type="radio" name="z3" value="1"><span class="scale-num">1</span><span class="scale-label">Muy bajo</span></label>
+      <label class="scale-opt"><input type="radio" name="z3" value="2"><span class="scale-num">2</span><span class="scale-label">Bajo</span></label>
+      <label class="scale-opt"><input type="radio" name="z3" value="3"><span class="scale-num">3</span><span class="scale-label">Moderado</span></label>
+      <label class="scale-opt"><input type="radio" name="z3" value="4"><span class="scale-num">4</span><span class="scale-label">Alto</span></label>
+      <label class="scale-opt"><input type="radio" name="z3" value="5"><span class="scale-num">5</span><span class="scale-label">Transformador</span></label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="q-num">Z4</span>¿Hay algún aspecto del ciclo de vida o del uso de IA sobre el que quieras hacer algún comentario adicional?</div>
+    <textarea placeholder="Cualquier observación, caso de uso concreto, herramienta que conozcas, riesgo o limitación que no hayas podido reflejar en el formulario..."></textarea>
+  </div>
+
+  <div class="card" style="background:var(--ada-light); border-color:#B3D4F0;">
+    <div class="card-title" style="color:var(--ada-blue);">📅 Disponibilidad para sesión de contraste</div>
+    <p style="font-size:13px; margin-top:8px; color:var(--ada-navy);">Si tu equipo está disponible para una breve sesión de contraste presencial o por videollamada para ampliar alguna de las respuestas, indícalo:</p>
+    <div class="radio-group" style="margin-top:12px;">
+      <label class="radio-opt"><input type="radio" name="z_disponible" value="si"> Sí, estaríamos disponibles</label>
+      <label class="radio-opt"><input type="radio" name="z_disponible" value="no"> No en este momento</label>
+      <label class="radio-opt"><input type="radio" name="z_disponible" value="quiza"> Quizás, dependería de la agenda</label>
+    </div>
+  </div>
+
+  <div class="nav-buttons">
+    <button class="btn btn-secondary" onclick="goTo(10)">← Anterior</button>
+    <button class="btn btn-success" onclick="enviarFormulario()">Finalizar formulario ✓</button>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════ -->
+<!-- SECCIÓN 12: COMPLETADO -->
+<!-- ══════════════════════════════════════════ -->
+<section class="section" id="sec-12">
+
+  <!-- Estado: enviando -->
+  <div class="card completion" id="estado-enviando" style="display:none;">
+    <div class="completion-icon" style="animation: spin 1s linear infinite; display:inline-block;">⏳</div>
+    <h2>Enviando respuestas...</h2>
+    <p>Por favor espera, estamos registrando tu formulario.</p>
+  </div>
+
+  <!-- Estado: éxito -->
+  <div class="card completion" id="estado-exito" style="display:none;">
+    <div class="completion-icon">✅</div>
+    <h2>¡Gracias por tu participación!</h2>
+    <p>Tus respuestas han sido enviadas correctamente al equipo de Minsait y serán analizadas en el marco del caso de uso de <strong>Consultoría de Capacidades IA</strong> de la Agencia Digital de Andalucía.</p>
+    <p style="margin-top:8px; font-size:13px; color:var(--ada-muted);">Se ha enviado una copia a <strong>jargongora@minsait.com</strong>. El equipo se pondrá en contacto si necesita ampliar algún punto.</p>
+    <div style="margin-top:28px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+      <button class="btn btn-secondary" onclick="window.print()">🖨️ Imprimir / PDF</button>
+      <button class="btn btn-secondary" onclick="descargarRespuestas()">⬇️ Descargar respuestas</button>
+      <button class="btn btn-primary" onclick="location.reload()">Rellenar de nuevo</button>
+    </div>
+  </div>
+
+  <!-- Estado: error -->
+  <div class="card completion" id="estado-error" style="display:none;">
+    <div class="completion-icon">⚠️</div>
+    <h2>No se pudo enviar el formulario</h2>
+    <p>Ha ocurrido un problema al conectar con el servidor. Por favor, prueba de nuevo o contacta directamente con <strong>jargongora@minsait.com</strong>.</p>
+    <div style="margin-top:28px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+      <button class="btn btn-primary" onclick="enviarFormulario()">Reintentar</button>
+      <button class="btn btn-secondary" onclick="descargarRespuestas()">⬇️ Descargar respuestas</button>
+      <button class="btn btn-secondary" onclick="goTo(11)">Volver al formulario</button>
+    </div>
+  </div>
+
+</section>
+
+</main>
+
+<script>
+// ─── DATA: Fases ──────────────────────────────────────────────
+const fasesData = {
+  1: {
+    tasks: [
+      "A.1.1.1 Sesiones con negocio para identificar requisitos funcionales",
+      "A.1.1.2 Identificación de fuentes de datos y restricciones",
+      "A.1.1.3 Análisis preliminar del modelo conceptual",
+      "A.1.1.4 Diseño funcional"
+    ],
+    examples: "Ej: Copilot para generar actas de reunión; ChatGPT para estructurar requisitos funcionales; Azure AI para análisis de documentos del cliente..."
+  },
+  2: {
+    tasks: [
+      "A.2.1.1 Análisis de la arquitectura necesaria",
+      "A.2.1.2 Diseño de la arquitectura",
+      "A.2.1.3 Definición de entornos (desarrollo, pruebas y producción)",
+      "A.2.1.4 Validación técnica y documentación",
+      "A.2.2.1 Configuración de la arquitectura de datos dentro de la plataforma",
+      "A.2.2.2 Levantamiento de herramientas de monitorización y trazabilidad",
+      "A.2.2.3 Definición del modelo de despliegue CICD",
+      "A.2.2.4 Levantamiento de herramientas CICD",
+      "A.2.2.5 Documentación técnica y operativa"
+    ],
+    examples: "Ej: GitHub Copilot para IaC / bicep; Copilot en Azure DevOps para generación de pipelines CICD; asistentes IA para documentación de arquitectura..."
+  },
+  3: {
+    tasks: [
+      "A.3.1.1 Ingesta inicial de datos desde sistemas origen",
+      "A.3.1.2 Limpieza, transformación y estandarización (data quality)",
+      "A.3.1.3 Construcción del datalake/lakehouse por capas",
+      "A.3.1.4 Creación del modelo de datos final",
+      "A.3.1.5 Pruebas unitarias y validación de datos"
+    ],
+    examples: "Ej: Fabric Copilot para generación de notebooks PySpark; GitHub Copilot para transformaciones SQL; Microsoft Purview IA para clasificación automática de datos..."
+  },
+  4: {
+    tasks: [
+      "A.4.1.1 Diseño de los procesos analíticos",
+      "A.4.1.2 Construcción de procesos de analítica avanzada",
+      "A.4.1.3 Pruebas unitarias y validación"
+    ],
+    examples: "Ej: Azure AutoML para entrenamiento de modelos; Copilot en Fabric para exploración de datos; GitHub Copilot para código de modelos Python/ML..."
+  },
+  5: {
+    tasks: [
+      "A.5.1.1 Elaboración del prototipo de Dashboard",
+      "A.5.1.2 Sesión de aprobación del prototipo",
+      "A.5.1.3 Desarrollo de visualizaciones",
+      "A.5.1.4 Construcción de dashboards",
+      "A.5.1.5 Sesiones de validación con usuarios",
+      "A.5.1.6 Corrección de incidencias"
+    ],
+    examples: "Ej: Power BI Copilot para generación de visualizaciones y medidas DAX; IA para sugerencia de layouts; asistentes para generación de narrativas automáticas en informes..."
+  },
+  6: {
+    tasks: [
+      "A.6.1.1 Finalización de Manuales de Usuario",
+      "A.6.1.2 Sesiones de validación con usuarios",
+      "A.6.1.3 Corrección de incidencias y ajustes",
+      "A.6.2.1 Finalización de la documentación técnica",
+      "A.6.2.2 Despliegue en Producción",
+      "A.6.2.3 Sesiones de paso a soporte y traspaso de conocimiento",
+      "A.6.2.4 Activación del servicio de soporte"
+    ],
+    examples: "Ej: Copilot para redacción automática de manuales de usuario; IA para generación de scripts de despliegue; asistentes para documentación de entrega..."
+  },
+  7: {
+    tasks: [
+      "A.7.1.1 Reuniones de seguimiento y gestión del cambio",
+      "A.7.1.2 Identificación de mejoras y nuevas iteraciones",
+      "A.7.1.3 Atención de peticiones, consultas y resolución de incidencias",
+      "A.7.1.4 Gestión de conocimiento y documentación viva",
+      "A.7.1.5 Formación y adaptación"
+    ],
+    examples: "Ej: Copilot para resumen y actas de reuniones de seguimiento; IA para gestión de conocimiento y FAQ automatizadas; asistentes para materiales de formación..."
+  }
+};
+
+// ─── RENDER FASE TEMPLATE ───────────────────
+function renderFase(n) {
+  const data = fasesData[n];
+  const fid = `f${n}`;
+  const taskChips = data.tasks.map((t, i) =>
+    `<label class="task-chip"><input type="checkbox" name="${fid}_task_${i}"> ${t}</label>`
+  ).join('');
+
+  return `
+    <div class="card">
+      <div class="card-title"><span class="q-num">F${n}.1</span>¿Utilizas o conoces alguna herramienta de IA en esta fase?<span class="req">*</span></div>
+      <div class="radio-group">
+        <label class="radio-opt"><input type="radio" name="${fid}_usa" value="si" onchange="toggleCond('cond-${fid}-detalle',true);toggleCond('cond-${fid}-implica',true);toggleCond('cond-${fid}-implica2',true)"> Sí, la usamos actualmente</label>
+        <label class="radio-opt"><input type="radio" name="${fid}_usa" value="experimentando" onchange="toggleCond('cond-${fid}-detalle',true);toggleCond('cond-${fid}-implica',true);toggleCond('cond-${fid}-implica2',true)"> La estamos explorando / evaluando</label>
+        <label class="radio-opt"><input type="radio" name="${fid}_usa" value="conoce" onchange="toggleCond('cond-${fid}-detalle',false);toggleCond('cond-${fid}-implica',false);toggleCond('cond-${fid}-implica2',false)"> La conozco pero no la usamos</label>
+        <label class="radio-opt"><input type="radio" name="${fid}_usa" value="no" onchange="toggleCond('cond-${fid}-detalle',false);toggleCond('cond-${fid}-implica',false);toggleCond('cond-${fid}-implica2',false)"> No, no usamos IA en esta fase</label>
+      </div>
+      <div class="conditional" id="cond-${fid}-detalle">
+        <label class="q-label">¿Qué herramienta/s? Indica nombre y breve descripción del uso</label>
+        <textarea placeholder="${data.examples}"></textarea>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="q-num">F${n}.2</span>¿En qué tareas concretas de esta fase se aplica (o aplicaría) la IA?</div>
+      <div class="card-sub">Selecciona las tareas donde ves aplicación de IA, aunque sea potencial</div>
+      <div class="task-chips">${taskChips}</div>
+    </div>
+
+    <div class="conditional" id="cond-${fid}-implica">
+    <div class="card">
+      <div class="card-title"><span class="q-num">F${n}.3</span>Nivel de implantación actual de la IA en esta fase</div>
+      <div class="card-sub">¿Qué porcentaje del equipo que trabaja en esta fase usa herramientas de IA de forma habitual?</div>
+      <div class="radio-group">
+        <label class="radio-opt"><input type="radio" name="${fid}_implantacion" value="0"> 0% — No se usa</label>
+        <label class="radio-opt"><input type="radio" name="${fid}_implantacion" value="25"> &lt;25%</label>
+        <label class="radio-opt"><input type="radio" name="${fid}_implantacion" value="50"> 25-50%</label>
+        <label class="radio-opt"><input type="radio" name="${fid}_implantacion" value="75"> 50-75%</label>
+        <label class="radio-opt"><input type="radio" name="${fid}_implantacion" value="100"> +75%</label>
+      </div>
+    </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="q-num">F${n}.4</span>Valoración del esfuerzo necesario para usar las herramientas de IA en esta fase</div>
+      <div class="card-sub">1 = Muy fácil de adoptar / apenas requiere configuración · 5 = Requiere mucho esfuerzo de aprendizaje y configuración</div>
+      <div class="scale-wrap">
+        <label class="scale-opt"><input type="radio" name="${fid}_esfuerzo" value="1"><span class="scale-num">1</span><span class="scale-label">Muy fácil</span></label>
+        <label class="scale-opt"><input type="radio" name="${fid}_esfuerzo" value="2"><span class="scale-num">2</span><span class="scale-label">Fácil</span></label>
+        <label class="scale-opt"><input type="radio" name="${fid}_esfuerzo" value="3"><span class="scale-num">3</span><span class="scale-label">Moderado</span></label>
+        <label class="scale-opt"><input type="radio" name="${fid}_esfuerzo" value="4"><span class="scale-num">4</span><span class="scale-label">Complejo</span></label>
+        <label class="scale-opt"><input type="radio" name="${fid}_esfuerzo" value="5"><span class="scale-num">5</span><span class="scale-label">Muy complejo</span></label>
+      </div>
+    </div>
+
+    <div class="conditional" id="cond-${fid}-implica2">
+
+    <div class="card">
+      <div class="card-title"><span class="q-num">F${n}.5</span>Impacto percibido de la IA en la productividad de esta fase</div>
+      <div class="card-sub">1 = Sin impacto apreciable · 5 = Reducción muy significativa del tiempo / esfuerzo</div>
+      <div class="scale-wrap">
+        <label class="scale-opt"><input type="radio" name="${fid}_impacto" value="1"><span class="scale-num">1</span><span class="scale-label">Sin impacto</span></label>
+        <label class="scale-opt"><input type="radio" name="${fid}_impacto" value="2"><span class="scale-num">2</span><span class="scale-label">Leve</span></label>
+        <label class="scale-opt"><input type="radio" name="${fid}_impacto" value="3"><span class="scale-num">3</span><span class="scale-label">Moderado</span></label>
+        <label class="scale-opt"><input type="radio" name="${fid}_impacto" value="4"><span class="scale-num">4</span><span class="scale-label">Notable</span></label>
+        <label class="scale-opt"><input type="radio" name="${fid}_impacto" value="5"><span class="scale-num">5</span><span class="scale-label">Muy alto</span></label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="q-num">F${n}.6</span>Calidad de los resultados generados por la IA en esta fase</div>
+      <div class="card-sub">1 = Muy baja calidad, requiere mucha revisión · 5 = Alta calidad, se puede usar directamente con pocas revisiones</div>
+      <div class="scale-wrap">
+        <label class="scale-opt"><input type="radio" name="${fid}_calidad" value="1"><span class="scale-num">1</span><span class="scale-label">Muy baja</span></label>
+        <label class="scale-opt"><input type="radio" name="${fid}_calidad" value="2"><span class="scale-num">2</span><span class="scale-label">Baja</span></label>
+        <label class="scale-opt"><input type="radio" name="${fid}_calidad" value="3"><span class="scale-num">3</span><span class="scale-label">Aceptable</span></label>
+        <label class="scale-opt"><input type="radio" name="${fid}_calidad" value="4"><span class="scale-num">4</span><span class="scale-label">Buena</span></label>
+        <label class="scale-opt"><input type="radio" name="${fid}_calidad" value="5"><span class="scale-num">5</span><span class="scale-label">Excelente</span></label>
+      </div>
+    </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="q-num">F${n}.7</span>Limitaciones o riesgos percibidos del uso de IA en esta fase</div>
+      <div class="task-chips" style="margin-top:8px;">
+        <label class="task-chip"><input type="checkbox"> Resultados poco fiables o con errores frecuentes</label>
+        <label class="task-chip"><input type="checkbox"> Riesgo de confidencialidad / datos sensibles</label>
+        <label class="task-chip"><input type="checkbox"> Dependencia de herramientas externas no aprobadas</label>
+        <label class="task-chip"><input type="checkbox"> Curva de aprendizaje elevada</label>
+        <label class="task-chip"><input type="checkbox"> Integración difícil con las herramientas corporativas</label>
+        <label class="task-chip"><input type="checkbox"> Falta de trazabilidad o auditoría</label>
+        <label class="task-chip"><input type="checkbox"> No hay herramientas adecuadas disponibles aún</label>
+        <label class="task-chip"><input type="checkbox"> Resistencia del equipo a adoptarlas</label>
+      </div>
+      <label class="q-label">Observaciones adicionales o mejoras que sugerirías</label>
+      <textarea placeholder="¿Qué mejoraría el uso de IA en esta fase? ¿Qué necesitaría para adoptar más herramientas?"></textarea>
+    </div>
+  `;
+}
+
+// ─── INIT FASES ─────────────────────────────
+for (let i = 1; i <= 7; i++) {
+  document.getElementById(`fase-${i}-content`).innerHTML = renderFase(i);
+}
+
+// ─── NAVIGATION ─────────────────────────────
+let current = 0;
+const total = 12;
+
+function goTo(n) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(`sec-${n}`).classList.add('active');
+
+  const btns = document.querySelectorAll('.step-btn');
+  btns.forEach((b, i) => {
+    b.classList.remove('active', 'done');
+    if (i === n) b.classList.add('active');
+    else if (i < n) b.classList.add('done');
+  });
+
+  const pct = n === 12 ? 100 : Math.round((n / (total - 1)) * 100);
+  document.getElementById('progressBar').style.width = pct + '%';
+
+  current = n;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ─── CONDITIONAL TOGGLE ─────────────────────
+function toggleCond(id, show) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.toggle('show', show);
+}
+
+// ─── RADIO TRIGGER P1 ───────────────────────
+document.querySelectorAll('input[name="p1"]').forEach(r => {
+  r.addEventListener('change', () => {
+    toggleCond('cond-p1', r.value === 'otro');
+  });
+});
+
+// ─── RECOGER RESPUESTAS ──────────────────────
+function recogerRespuestas() {
+  const datos = {};
+
+  // Textos e inputs
+  document.querySelectorAll('input[type="text"], textarea, select').forEach(el => {
+    const key = el.name || el.closest('[id]')?.id || el.placeholder?.slice(0,30) || 'campo';
+    if (el.value.trim()) datos[key] = el.value.trim();
+  });
+
+  // Radios
+  document.querySelectorAll('input[type="radio"]:checked').forEach(el => {
+    datos[el.name] = el.value;
+  });
+
+  // Checkboxes
+  const cbGroups = {};
+  document.querySelectorAll('input[type="checkbox"]:checked').forEach(el => {
+    const label = el.closest('.task-chip')?.textContent?.trim() || el.value;
+    const group = el.closest('.task-chips')?.closest('.card')
+                   ?.querySelector('.card-title')?.textContent?.trim()?.slice(0,60)
+                   || 'seleccion';
+    if (!cbGroups[group]) cbGroups[group] = [];
+    cbGroups[group].push(label);
+  });
+  Object.assign(datos, cbGroups);
+
+  return datos;
+}
+
+// ─── FORMATEAR EMAIL ─────────────────────────
+function formatearTextoEmail(datos) {
+  const fases = {
+    'f1': 'F1 · Requisitos', 'f2': 'F2 · Arquitectura',
+    'f3': 'F3 · Ingeniería del dato', 'f4': 'F4 · Analítica',
+    'f5': 'F5 · Visualización', 'f6': 'F6 · Pruebas', 'f7': 'F7 · Coordinación'
+  };
+
+  let html = `
+    <div style="font-family:Arial,sans-serif; max-width:700px; margin:0 auto;">
+      <div style="background:#0D2B4E; padding:20px 28px; border-radius:8px 8px 0 0;">
+        <h1 style="color:white; margin:0; font-size:18px;">Nueva respuesta — Formulario IA en Proyectos de Dato</h1>
+        <p style="color:#B3D4F0; margin:6px 0 0; font-size:13px;">
+          Recibido: ${new Date().toLocaleString('es-ES')} · ADA · Consultoría Capacidades IA 2026
+        </p>
+      </div>
+      <div style="border:1px solid #D1E3F5; border-top:none; border-radius:0 0 8px 8px; padding:24px;">
+  `;
+
+  // Perfil
+  html += bloque('👤 PERFIL DEL RESPONDENTE', [
+    fila('Rol', datos['p1']),
+    fila('Experiencia', datos['p2']),
+    fila('Tipo de equipo', datos['p3']),
+  ]);
+
+  // Ciclo de vida
+  const tiempos = ['f1','f2','f3','f4','f5','f6','f7'].map(f => {
+    const k = Object.keys(datos).find(d => d.includes(f) && d.includes('tiempo'));
+    return k ? fila(fases[f] || f, datos[k]) : '';
+  }).join('');
+
+  html += bloque('🔄 VALIDACIÓN DEL CICLO DE VIDA', [
+    fila('¿Fases completas?', datos['c1']),
+    fila('Cambios en fases', datos['c1b'] || '—'),
+    fila('¿Tareas representativas?', datos['c2']),
+    fila('Cambios en tareas', datos['c2b'] || '—'),
+    tiempos,
+    fila('Esfuerzo real vs estimado', datos['c4'] || '—'),
+    fila('Condicionantes AAPP', datos['c5']),
+    fila('Detalle condicionantes', datos['c5b'] || '—'),
+  ]);
+
+  // Transversal
+  html += bloque('🌐 HERRAMIENTAS DE IA TRANSVERSALES', [
+    fila('¿Usan IA transversal?', datos['g1']),
+    fila('Herramientas transversales', datos['g1b'] || '—'),
+    fila('Nivel de implantación', datos['g2']),
+    fila('Política de uso de IA', datos['g4']),
+  ]);
+
+  // Fases
+  ['f1','f2','f3','f4','f5','f6','f7'].forEach(f => {
+    const usa = datos[`${f}_usa`];
+    const impl = datos[`${f}_implantacion`];
+    const esf = datos[`${f}_esfuerzo`];
+    const imp = datos[`${f}_impacto`];
+    const cal = datos[`${f}_calidad`];
+    if (usa || impl || esf) {
+      html += bloque(`📋 ${(fases[f] || f).toUpperCase()}`, [
+        fila('¿Usa IA?', usa),
+        fila('Nivel de implantación', impl ? impl + '%' : '—'),
+        fila('Esfuerzo (1-5)', esf || '—'),
+        fila('Impacto productividad (1-5)', imp || '—'),
+        fila('Calidad resultados (1-5)', cal || '—'),
+      ]);
+    }
+  });
+
+  // Cierre
+  html += bloque('🔮 REFLEXIONES FINALES', [
+    fila('Fase con mayor potencial de IA', datos['z1']),
+    fila('Descripción de mejora', datos['z1b'] || '—'),
+    fila('Potencial global (1-5)', datos['z3']),
+    fila('Comentarios adicionales', datos['z4'] || '—'),
+    fila('Disponibilidad para sesión', datos['z_disponible']),
+  ]);
+
+  html += `
+      </div>
+      <p style="font-size:11px; color:#999; text-align:center; margin-top:16px;">
+        Enviado automáticamente desde el Formulario IA Proyectos de Dato · ADA · Minsait 2026
+      </p>
+    </div>
+  `;
+  return html;
+}
+
+function bloque(titulo, filas) {
+  return `
+    <div style="margin-bottom:20px;">
+      <div style="background:#1460AA; color:white; padding:8px 14px; border-radius:6px;
+                  font-size:12px; font-weight:bold; letter-spacing:.04em; margin-bottom:2px;">
+        ${titulo}
+      </div>
+      <table style="width:100%; border-collapse:collapse; font-size:13px;">
+        ${filas.join('')}
+      </table>
+    </div>
+  `;
+}
+
+function fila(label, valor) {
+  if (!valor) return '';
+  const v = Array.isArray(valor) ? valor.join(', ') : valor;
+  return `
+    <tr>
+      <td style="padding:6px 10px; width:38%; color:#6B8299; border-bottom:1px solid #EAF3FB;
+                 vertical-align:top;">${label}</td>
+      <td style="padding:6px 10px; color:#1A2D40; border-bottom:1px solid #EAF3FB;
+                 vertical-align:top; font-weight:500;">${v}</td>
+    </tr>
+  `;
+}
+
+// ─── GENERADOR DE INFORME COMPLETO ───────────
+function generarInforme() {
+  const fecha = new Date().toLocaleString('es-ES');
+
+  /* ── Helpers de lectura del DOM ── */
+  function rVal(name) {
+    const el = document.querySelector(`input[name="${name}"]:checked`);
+    if (!el) return null;
+    return el.closest('label')?.textContent.trim() || el.value;
+  }
+  function tVal(sel) {
+    const el = document.querySelector(sel);
+    return (el && el.value.trim()) ? el.value.trim() : null;
+  }
+  function cbEnContenedor(sel) {
+    return [...document.querySelectorAll(`${sel} input[type="checkbox"]:checked`)]
+      .map(el => el.closest('label')?.textContent.trim()).filter(Boolean);
+  }
+  function cardByQ(qnum) {
+    for (const t of document.querySelectorAll('.q-num')) {
+      if (t.textContent.trim() === qnum) return t.closest('.card');
+    }
+    return null;
+  }
+  function cbEnCard(qnum) {
+    const c = cardByQ(qnum);
+    return c ? [...c.querySelectorAll('input[type="checkbox"]:checked')]
+      .map(el => el.closest('label')?.textContent.trim()).filter(Boolean) : [];
+  }
+  function taEnCard(qnum, index = 0) {
+    const c = cardByQ(qnum);
+    if (!c) return null;
+    const tas = c.querySelectorAll('textarea');
+    const ta = tas[index];
+    return (ta && ta.value.trim()) ? ta.value.trim() : null;
+  }
+  function escH(t) {
+    return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+  }
+
+  /* ── Constructores HTML ── */
+  function fila(label, valor) {
+    if (valor === null || valor === undefined) return '';
+    if (Array.isArray(valor) && valor.length === 0) return '';
+    const v = Array.isArray(valor)
+      ? '<ul style="margin:0;padding-left:16px;">' + valor.map(x=>`<li>${escH(x)}</li>`).join('') + '</ul>'
+      : escH(String(valor));
+    return `<tr>
+      <td style="width:36%;padding:7px 12px;color:#6B8299;vertical-align:top;border-bottom:1px solid #EAF3FB;font-size:12.5px;">${label}</td>
+      <td style="padding:7px 12px;color:#1A2D40;vertical-align:top;border-bottom:1px solid #EAF3FB;font-size:13px;font-weight:500;">${v}</td>
+    </tr>`;
+  }
+  function seccion(emoji, titulo, filas) {
+    const contenido = filas.filter(Boolean).join('');
+    const vacio = contenido
+      ? ''
+      : '<tr><td colspan="2" style="padding:10px 12px;color:#aaa;font-style:italic;font-size:12px;">Sin respuestas en esta sección</td></tr>';
+    return `
+    <div style="margin-bottom:22px;border:1px solid #D1E3F5;border-radius:8px;overflow:hidden;">
+      <div style="background:#1460AA;color:white;padding:9px 16px;font-size:12px;font-weight:bold;letter-spacing:.04em;">
+        ${emoji} ${titulo}
+      </div>
+      <table style="width:100%;border-collapse:collapse;">${contenido}${vacio}</table>
+    </div>`;
+  }
+
+  const faseNombres = {
+    1:'F1 · Identificación de necesidades y requisitos',
+    2:'F2 · Arquitectura y preparación de infraestructura',
+    3:'F3 · Ingeniería del dato y modelado',
+    4:'F4 · Procesos de analítica avanzada',
+    5:'F5 · Visualización y Dashboards',
+    6:'F6 · Pruebas de usuario y paso a soporte',
+    7:'F7 · Coordinación, adopción y mejora continua'
+  };
+
+  /* ══════════════════════════════════════════
+     SECCIÓN 1 · PERFIL
+  ══════════════════════════════════════════ */
+  const p4tec = cbEnContenedor('#sec-1 .task-chips');
+  const p4otras = tVal('[name="p4_otras"]');
+  if (p4otras) p4tec.push('Otras: ' + p4otras);
+
+  const bloques = [];
+
+  bloques.push(seccion('👤','SECCIÓN 1 · PERFIL DEL RESPONDENTE', [
+    fila('P1 · Rol principal', rVal('p1')),
+    fila('P1 · Especificación del rol', tVal('#cond-p1 input[type="text"]')),
+    fila('P2 · Años de experiencia', rVal('p2')),
+    fila('P3 · Tipo de equipo', rVal('p3')),
+    fila('P4 · Tecnologías habituales', p4tec),
+  ]));
+
+  /* ══════════════════════════════════════════
+     SECCIÓN 2 · CICLO DE VIDA
+  ══════════════════════════════════════════ */
+  const tiemposFilas = [1,2,3,4,5,6,7].map(n => {
+    const sel = tVal(`[name="c3_f${n}"]`);
+    const obs = tVal(`[name="c3_f${n}_obs"]`);
+    if (!sel && !obs) return '';
+    const txt = [sel, obs ? `Obs: ${obs}` : ''].filter(Boolean).join(' · ');
+    return fila(`C3 · ${faseNombres[n]}`, txt);
+  });
+
+  bloques.push(seccion('🔄','SECCIÓN 2 · VALIDACIÓN DEL CICLO DE VIDA', [
+    fila('C1 · ¿Las 7 fases son representativas?', rVal('c1')),
+    fila('C1 · Cambios sugeridos en fases', tVal('#cond-c1-si textarea')),
+    fila('C2 · ¿Las tareas son representativas?', rVal('c2')),
+    fila('C2 · Cambios sugeridos en tareas', tVal('#cond-c2 textarea')),
+    ...tiemposFilas,
+    fila('C4 · Fases con esfuerzo real ≠ estimado', tVal('[name="c4"]')),
+    fila('C5 · Condicionantes específicos de AAPP', rVal('c5')),
+    fila('C5 · Descripción de condicionantes', tVal('#cond-c5 textarea')),
+  ]));
+
+  /* ══════════════════════════════════════════
+     SECCIÓN 3 · HERRAMIENTAS GENERALES
+  ══════════════════════════════════════════ */
+  const g3card = cardByQ('G3');
+  let g3impulso = [], g3freno = [], g3obs = null;
+  if (g3card) {
+    const chips = g3card.querySelectorAll('.task-chips');
+    if (chips[0]) g3impulso = [...chips[0].querySelectorAll('input:checked')]
+      .map(el => el.closest('label')?.textContent.trim()).filter(Boolean);
+    if (chips[1]) g3freno  = [...chips[1].querySelectorAll('input:checked')]
+      .map(el => el.closest('label')?.textContent.trim()).filter(Boolean);
+    const ta = g3card.querySelector('textarea');
+    if (ta && ta.value.trim()) g3obs = ta.value.trim();
+  }
+
+  bloques.push(seccion('🌐','SECCIÓN 3 · HERRAMIENTAS DE IA TRANSVERSALES', [
+    fila('G1 · ¿Usa IA de forma transversal?', rVal('g1')),
+    fila('G1 · Herramientas y descripción de uso', tVal('#cond-g1 textarea')),
+    fila('G2 · Nivel de implantación en el equipo', rVal('g2')),
+    fila('G3 · Factores que impulsan la adopción', g3impulso),
+    fila('G3 · Factores que dificultan la adopción', g3freno),
+    fila('G3 · Observaciones adicionales', g3obs),
+    fila('G4 · Política de uso de IA', rVal('g4')),
+  ]));
+
+  /* ══════════════════════════════════════════
+     SECCIONES 4-10 · POR FASE
+  ══════════════════════════════════════════ */
+  for (let n = 1; n <= 7; n++) {
+    const fid = `f${n}`;
+
+    // Tareas con IA (F.2)
+    const tareas = cbEnCard(`F${n}.2`);
+
+    // Herramientas (textarea en cond-f{n}-detalle)
+    const herramientas = (() => {
+      const cond = document.getElementById(`cond-${fid}-detalle`);
+      if (!cond) return null;
+      const ta = cond.querySelector('textarea');
+      return (ta && ta.value.trim()) ? ta.value.trim() : null;
+    })();
+
+    // Limitaciones (F.7 checkboxes + textarea)
+    const limCard = cardByQ(`F${n}.7`);
+    const limitaciones = limCard
+      ? [...limCard.querySelectorAll('input[type="checkbox"]:checked')]
+          .map(el => el.closest('label')?.textContent.trim()).filter(Boolean)
+      : [];
+    const limObs = limCard
+      ? (ta => ta && ta.value.trim() ? ta.value.trim() : null)(limCard.querySelector('textarea'))
+      : null;
+
+    bloques.push(seccion('📋', `SECCIÓN ${n+3} · ${faseNombres[n].toUpperCase()}`, [
+      fila(`F${n}.1 · ¿Usa o conoce IA en esta fase?`, rVal(`${fid}_usa`)),
+      fila(`F${n}.1 · Herramientas y descripción de uso`, herramientas),
+      fila(`F${n}.2 · Tareas donde se aplica (o aplicaría) la IA`, tareas),
+      fila(`F${n}.3 · Nivel de implantación en el equipo`, rVal(`${fid}_implantacion`)),
+      fila(`F${n}.4 · Esfuerzo de adopción (1=muy fácil · 5=muy complejo)`, rVal(`${fid}_esfuerzo`)),
+      fila(`F${n}.5 · Impacto en productividad (1=sin impacto · 5=muy alto)`, rVal(`${fid}_impacto`)),
+      fila(`F${n}.6 · Calidad de resultados (1=muy baja · 5=excelente)`, rVal(`${fid}_calidad`)),
+      fila(`F${n}.7 · Limitaciones y riesgos percibidos`, limitaciones),
+      fila(`F${n}.7 · Observaciones y mejoras sugeridas`, limObs),
+    ]));
+  }
+
+  /* ══════════════════════════════════════════
+     SECCIÓN 11 · CIERRE
+  ══════════════════════════════════════════ */
+  const z1card = cardByQ('Z1');
+  const z1fases  = z1card
+    ? [...z1card.querySelectorAll('input[type="checkbox"]:checked')]
+        .map(el => el.closest('label')?.textContent.trim()).filter(Boolean)
+    : [];
+  const z1porque = z1card
+    ? (ta => ta && ta.value.trim() ? ta.value.trim() : null)(z1card.querySelector('textarea'))
+    : null;
+
+  const z4card = cardByQ('Z4');
+  const z4val = z4card
+    ? (ta => ta && ta.value.trim() ? ta.value.trim() : null)(z4card.querySelector('textarea'))
+    : null;
+
+  bloques.push(seccion('🔮','SECCIÓN 11 · REFLEXIONES FINALES Y VISIÓN DE FUTURO', [
+    fila('Z1 · Fases con mayor potencial de IA', z1fases),
+    fila('Z1 · ¿Por qué? Mejora imaginada', z1porque),
+    fila('Z2 · Capacidades de IA más valiosas', cbEnCard('Z2')),
+    fila('Z3 · Valoración global del potencial (1-5)', rVal('z3')),
+    fila('Z4 · Comentarios adicionales', z4val),
+    fila('Disponibilidad para sesión de contraste', rVal('z_disponible')),
+  ]));
+
+  /* ══════════════════════════════════════════
+     MONTAR HTML FINAL
+  ══════════════════════════════════════════ */
+  return `<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Informe Formulario IA — ${fecha}</title>
+<style>
+  body { font-family: Arial, sans-serif; background: #F5F7FA; color: #1A2D40;
+         padding: 32px; margin: 0; font-size: 13px; }
+  .wrap { max-width: 780px; margin: 0 auto; }
+  .cabecera { background: #0D2B4E; color: white; padding: 22px 28px;
+              border-radius: 10px 10px 0 0; }
+  .cabecera h1 { font-size: 17px; margin: 0 0 6px; }
+  .cabecera p  { font-size: 11.5px; color: #B3D4F0; margin: 0; }
+  .footer { font-size: 11px; color: #aaa; text-align: center; margin-top: 24px; }
+  @media print { body { background: white; padding: 12px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="cabecera">
+  <h1>Informe de Respuestas — Formulario IA en Proyectos de Dato</h1>
+  <p>Exportado: ${fecha} · ADA · Consultoría Capacidades IA 2026</p>
+</div>
+${bloques.join('\n')}
+<div class="footer">Generado automáticamente · Formulario IA Proyectos de Dato · ADA · Minsait 2026</div>
+</div>
+</body>
+</html>`;
+}
+
+// ─── DESCARGAR RESPUESTAS ────────────────────
+function descargarRespuestas() {
+  const datos = recogerRespuestas();
+  const fecha = new Date().toISOString().slice(0, 10);
+  const respondente = (datos['p1'] || 'anonimo').replace(/\s+/g, '_').slice(0, 30);
+
+  const html = generarInforme();
+  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = `informe_formulario_IA_${respondente}_${fecha}.html`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+const POWER_AUTOMATE_URL = "https://default7808e00514894374954bd3b08f1939.20.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/5f93bb9a7a91414c88c9e462973859d8/triggers/manual/paths/invoke?api-version=1";
+
+async function enviarFormulario() {
+  // Mostrar pantalla de envío
+  goTo(12);
+  document.getElementById('estado-enviando').style.display = 'block';
+  document.getElementById('estado-exito').style.display   = 'none';
+  document.getElementById('estado-error').style.display   = 'none';
+
+  const datos   = recogerRespuestas();
+  const htmlEmail = formatearTextoEmail(datos);
+
+  const payload = {
+    fecha: new Date().toISOString(),
+    respondente: datos['p1'] || 'Anónimo',
+    equipo: datos['p3'] || '',
+    cuerpo_html: htmlEmail,
+    datos_completos: datos
+  };
+
+  try {
+    const resp = await fetch(POWER_AUTOMATE_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    document.getElementById('estado-enviando').style.display = 'none';
+
+    if (resp.ok || resp.status === 202) {
+      document.getElementById('estado-exito').style.display = 'block';
+    } else {
+      console.error('Status:', resp.status);
+      document.getElementById('estado-error').style.display = 'block';
+    }
+  } catch (err) {
+    console.error('Error:', err);
+    document.getElementById('estado-enviando').style.display = 'none';
+    document.getElementById('estado-error').style.display   = 'block';
+  }
+}
+</script>
+
+<style>
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+</style>
+</body>
+</html>
